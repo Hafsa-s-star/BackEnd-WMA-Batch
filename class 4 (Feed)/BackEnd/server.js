@@ -1,6 +1,6 @@
 import app from "./src/app.js"
 import connectDB from "./src/db/db.js"
-const port = 7000
+const port = 3000
  connectDB()
 
 app.listen(port, () => {
