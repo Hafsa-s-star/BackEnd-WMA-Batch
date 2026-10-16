@@ -1,5 +1,7 @@
 import express from "express"
 import postModel from "./models/post.model.js"
+import  uploadFile  from "../services/storage.service.js"
+import multer from 'multer'
 const app = express()
 app.use(express.json())
 
@@ -8,12 +10,16 @@ app.get('/posts', async(req, res) => {
 //    const post= await postModel.findOne({title:"Post title"}) //{} or null
    res.status(200).json({message:"Posts fetched sucessfully", post})
 })
-app.post('/posts', async(req, res) => {
+const storage = multer.memoryStorage()
+const upload = multer({ storage: storage })
+
+app.post('/posts', upload.single('image') , async(req, res) => {
     const data= req.body
-    await postModel.create({
-        title: data.title,
-        desc:data.desc
-    })
+    const imgBuffer = req.file.buffer
+    console.log(data,imgBuffer)
+
+    const result = await uploadFile(imgBuffer)
+    console.log(result.url)
     res.status(201).json({messgae:"Post created sucessfully"})
 })
 
